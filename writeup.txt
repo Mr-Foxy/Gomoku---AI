@@ -1,0 +1,309 @@
+================================================================================
+         Computer Science 1901 - Spring 2013 - University of Minnesota
+                              Final Course Project
+================================================================================
+
+ASSIGNMENT SUBMISSION:
+================================================================================
+  Due Wednesday, May 1, 2013 By ** 11:50pm **.
+  Electronic Submission Using Moodle
+  Format:  Scheme Source Code File
+           Use random.scm as a template for your submission.
+           Name of file must be [x500 account of person submitting].scm
+             For example:  ebon9999.scm
+           If working in a group, only one person should submit the file.
+           The name of the file should be the concatenation of your X500's
+             For example:  ebon9999demac9999.scm
+     Groups must be of only two people.
+           Complete the header information at the top of the file.
+
+  Requirements:
+    Submission must run on MIT Scheme on one of the CSELabs computers.
+    If you develop the code using another Scheme interpreter (such as Dr Scheme)
+    and/or on a computer not on the CSELabs network (such as your laptop or home
+    computer), you are expected to ensure it runs using MIT Scheme on an CSELabs
+    machine.
+
+    Only one submission is allowed per group.  You may resubmit multiple times
+    in order to fix a bug, enhance your submission, etc., but the last
+    submission made will be used for grading.
+
+INSTRUCTIONS:
+================================================================================
+Collaboration:
+  + Project may be worked on in groups of two or done individually.
+  + General discussion is allowed, however, NO sharing of code (including code
+    written in Scheme, psuedo-code, or verbal) is allowed between groups.
+  + You may use code from your lab assignments or from the book.
+  + If you have questions regarding any of these policies, contact a TA for
+    clarification.
+
+Obtaining Help:
+  The TAs are available to answer questions regarding the project during their
+  normally scheduled office hours.  General questions about the project such as
+  clarification of expectations, submission instructions, and how some of the
+  provided code works can be addressed during lab sessions, however, TAs will
+  not provide help on specific problems during that time so that they are
+  available to assist with the current lab assignment.
+
+Source Code:
+  All procedures you write should:
+   + be properly spaced (including line breaks and indentation) for readability.
+   + be commented in such a way that explains your methodology.
+      Some level of SHORT comments are required, primarily for explaining the 
+      intent of your code (what your code does, not how). 
+      Large, gratuitous amounts of unnecessary comments may be docked points. Your
+      comments do not need to describe HOW your code works (your code should
+      speak for itself). Having more comments than code is bad.
+  
+Test Cases:
+  + You do not need to submit any test cases.
+  + You should make sure that your submission runs reliably, without error, and 
+    returns valid moves in all cases.  Submissions that do not will be marked
+    down heavily.
+
+ADDITIONAL DETAILS:
+================================================================================
+File Header Format:
+  The header format for your submitted Scheme file is included in the random.scm 
+  file.  Be sure to fill in your information as shown.
+
+Submission Instructions:
+  Step through the following instructions to submit a file.
+
+  - Be sure your file loads and your tests execute successfully in MIT Scheme on
+    an CSELabs machine.
+  - Make sure you have filled out the file header information.
+  - Save your file and be sure it is named as described above.
+
+  - To submit the file, click the link on the CSCI 1901 web page labeled
+    "Final Project".
+     - Submit only your AI file. Other modified files (ie util.scm or help.scm)
+       are not allowed. If you want to use modified versions of these functions,
+       you must copy the relevent code into your AI.  
+
+
+Project Overview
+================================================================================
+Purpose:
+  The goal of this assignment is for you to write code to play one
+  player's part in a game called "gomoku++".  More specifically, you 
+  will need to write an AI (Artificial Intelligence) player procedure 
+  that will return a valid move when called by the "referee" code that 
+  runs the game.  The referee code is already written for you.  So, your 
+  AI will just need to make a strategic move each time it is called.  
+
+General Description:
+  You will be writing an intelligent computer game player that will play one
+  side of an enhanced version of the game "gomoku".  You are free to use any
+  techniques you'd like, but your player must be able to produce moves within 
+  an acceptable delay.
+
+Files:
+  gomoku++.scm -- This file contains the "referee" code that keeps track of the
+  current status of the board and gets moves from each player.  It also handles
+  the displaying of the board and checks against illegal moves.  It will call
+  your player-procedure with a copy of the current board and wait for your move
+  to be returned.
+
+  Also included in this file are constants that specify game parameters.  You
+  will be able to read these values from within your file. You may also edit
+  these values to test various game environments, but remember we will use the 
+  default values during grading.
+
+  help.scm -- This file contains all of the game-specific helper code used by
+  gomoku++.scm.  Nearly everything you might want to interact with the game 
+  board, create/use abstractions, and to look up information on the state of the
+  game is there.  gomoku++ loads this file, so you will have access to all of 
+  these procedures through the global environment.
+
+  util.scm -- This file contains general utility functions.  These are not game-
+  specific.  gomoku++.scm loads this file, so you will have access to these
+  functions through the global environment.
+
+  random.scm -- This file is a very simple player that picks an open space at
+  random.  You should copy / rename this file and use it as the basis for your
+  code.  All code you write should be inside of the player-procedure definition.
+
+
+Description and Rules
+================================================================================
+Game Overview.  
+  gomoku++ is an adaptation of the game gomoku. Gomoku is very similar to the
+  game Tic-Tac-Toe, except that a win is defined by 5 in a row vertically, hori-
+  zontally or diagonally rather than 3. gomoku++ varies from the original gomoku 
+  by the addition of blocked spaces, shown as [#]. A blocked space may not be 
+  played in and is not counted towards the 5-chain win. At the beginning of the
+  game, there are four blocks in the middle of the board separating two spaces
+  owned by each player (see below, The Board Representation). There are also
+  *BOARD-SIZE*/3 (rounded up) additional blocked spaces distributed randomly. 
+
+
+Rules:
+  There are two players, 1 and 2.  They alternate turns. Each player makes one 
+  move each turn.  This move claims a previously empty space on the game board.
+  The board size varies from game to game.  
+
+  Players win the game by strategically filling in spaces to force a chain of
+  5 while preventing their opponents from doing the same. The game is over when
+  either player succeeds in making a chain of 5 or the board is filled with no
+  winner.
+
+
+The Board Representation:
+  The board is represented by rows and columns of spaces.  The following is
+  a typical 14 Row x 14 Column starting board.  
+
+.-[ gomoku++ ]-------------------------------------------------.
+:                                                              :
+:   ._1___2___3___4___5___6___7___8___9__10__11__12__13__14_.  :
+:  1| _ | _ | _ | _ | _ | _ | _ | _ | _ |[#]| _ | _ | _ | _ |  :
+:  2| _ | _ | _ | _ | _ | _ | _ | _ |[#]| _ | _ | _ | _ | _ |  :
+:  3| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+:  4| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+:  5| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+:  6| _ | _ | _ | _ | _ | X | _ | _ | O | _ | _ | _ | _ | _ |  :
+:  7| _ | _ | _ |[#]| _ | _ |[#]|[#]| _ | _ | _ | _ | _ | _ |  :
+:  8| _ | _ | _ | _ | _ | _ |[#]|[#]|[#]| _ | _ | _ | _ | _ |  :
+:  9| _ | _ | _ | _ | _ | O | _ | _ | X | _ | _ | _ | _ | _ |  :
+: 10| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+: 11| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+: 12| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+: 13| _ |[#]| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+: 14| _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ |  :
+:   '-------------------------------------------------------'  :
+:                                                              :
+'--------------------------------------------------------------' 
+
+  As you can see, the columns and rows are numbered for your convenience. 
+  
+  The spaces are represented as follows:
+
+   _  is an open space.
+   X  marks a space owned by Player 1.
+   O  marks a space owned by Player 2.
+  [#] marks a blocked space.
+
+  Game boards may be of nearly any size, as long as the size is even. This
+  restriction is because of how the starting board is set up. You may
+  modify the constants defined at the top of gomoku++.scm to create your own 
+  boards tailored to whatever specifics you wish. Keep in mind that as the 
+  board size grows, the complexity of your operations will grow as well, 
+  resulting in longer move calculation times. 
+
+  During grading and in the tournament, we will use different board sizes, so
+  be sure that your code does not rely on any specific size to work.  You can
+  use the *BOARD-SIZE* global variable to determine the current size of the 
+  board, if you need to.
+
+
+Writing Your Code:
+  To do this project you do NOT need to understand the referee code in
+  'gomoku++.scm.' (However, understanding the game code may help you write
+  your own procedures.)  Your job is to write just a player-procedure.
+  Your procedure will be called by, but be independent of, the
+  referee code.  This means your code will not have access to any of
+  the referee code's local procedures or local data, and vice versa.
+  We suggest that you begin by using the random player code and some
+  of the procedures found in help.scm and util.scm.
+
+  Any additional procedures you write must be made local to (i.e., nested 
+  inside) your player-procedure.  You are also free to use any of the code from
+  the text, from the class web page, or from your own previous assignments.
+  But, for any code you reuse you must include comments indicating the source of
+  the code.
+
+
+Running the Game (Referee):
+  The game can be set up for 2 human players, 2 computer players, or 1
+  of each with the computer being either the first or second player.
+  The first player procedure loaded becomes Player 1.  After loading
+  "gomoku++.scm" into scheme, you can start the game with any combination
+  of human and computer players using (play-game ...).  Some examples
+  follow:
+    
+    (play-game 'human 'human) will start gomoku++ with two interactive players.
+
+    (play-game "random.scm" 'human) will start gomoku++ with Player 1 as the
+    computer random player found in file "random.scm" and an interactive player
+    for Player 2 .
+
+    (play-game "yourcode.scm" "random.scm") will start gomoku++ with Player 1 
+    as the player-procedure you wrote found in the file "yourcode.scm" and 
+    Player 2 as the random player procedure.
+
+  Note that the player procedures should be in the same directory from which
+  you are running gomoku++.scm.
+
+
+Testing your code:
+  We have included a procedure that you can use to run several games using your
+  code and return the results, without displaying the board for each move. This
+  can be used to quickly test as many games as you wish to play. The procedure
+  (run-tests ...) will play the two given player files against each other, 
+  alternating who plays first, store the wins in a list, then return the gross
+  wins, the win percentage and how many times each player went over the time 
+  limit. It is called like this:
+
+    (run-tests "player1proc.scm" "player2proc.scm" n) where n is the number of
+						      games you wish to play
+
+  IMPORTANT NOTE: for reasons none of us can figure out, if you use run-tests
+  immediately after loading gomoku++.scm, it may freeze and cause terrible
+  things to happen to your interpreter. Restarting your interpreter is the
+  only way to fix it. However, if you play a quick game using play-game first,
+  then use run-tests, it works perfectly. Bizarre.
+  
+
+Collaboration and working in groups:
+  You are permitted and encouraged to work in groups of 2 on this
+  assignment. Sorry, no groups of 3 or more.  Remember that misconduct
+  such as copying code (from anyone else if you are working individually,
+  from anyone outside your group if you are working in a group) or
+  giving others copies of your code is a grave situation and will have
+  serious repercussions.
+
+
+Grading:
+  30 points - your player-procedure makes all legal moves without
+              crashing until the game is over (win or lose)
+       
+  30 points - organization, style, and apparent effort 
+
+  40 points - performance against benchmark computer players in a
+              variety of trials (for example, against a random player,
+              against a trying offensive player)
+  
+  Players must return moves in a timely fashion to avoid delay-of-game
+  forfeiture.  As a rough rule of thumb, your next move should take no
+  more than 2 real-time seconds compute and generate.  So, basically
+  there should be no obvious delay.  Accordingly, you are encouraged to
+  emphasize strategy as opposed spending lots of computer time on
+  generating a game tree of possible moves and responses.  Also, players
+  that attempt to subvert the referee program will be disqualified from
+  the tournament.
+
+  If you discover a bug or error in the referee code, report it, and it
+  requires a fix on our part, extra credit will also be awarded. Using
+  our functions improperly or misunderstanding the effect of our functions,
+  will not count as a bug. 
+ 
+
+
+Class Tournament:
+  Tournament finalists will be chosen by a round-robin style competition between
+  each section facilitated by the TAs.  Top finishers from round-robin play will
+  move on to a championship tournament in lecture.
+
+  Please note that success in the tournament is completely separate from
+  the grade you get on this project.  Specifically, based on evidence
+  of good effort, programming style, and the other grading criteria
+  given above, you can get a top grade regardless of how your program
+  does in the class competition.  The competition simply awards bonus
+  points that are applied after final grades are calculated.
+
+  Bonus points will be awarded for qualifing for the tournament with additional
+  points awarded for the top 3 AIs.                          
+
+  If you work in a group of 2, *both* players will get the same bonus
+  points.
